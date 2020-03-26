@@ -1,15 +1,2 @@
-INSERT INTO users (username, password, enabled)
-    values ( 'user',
-    'pass',
-    true);
-
-INSERT into users (username, password, enabled)
-    values ('admin',
-    'pass',
-    true);
-
-INSERT INTO authorities (username, authority)
-    values ('user', 'ROLE_USER');
-
-INSERT INTO authorities (username, authority)
-    values('admin', 'ROLE_ADMIN');
+insert into springsecurity.user_info (user_name, password, active, roles) values ('user', 'pass', true, 'ROLE_USER');
+insert into springsecurity.user_info (user_name, password, active, roles) values ('admin', 'pass', true, 'ROLE_USER,ROLE_ADMIN');

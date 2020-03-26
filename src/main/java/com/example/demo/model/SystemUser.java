@@ -4,25 +4,36 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SystemUser implements UserDetails {
 
-    private final String userName;
+    private String userName;
+    private String password;
+    private List<GrantedAuthority> grantedAuthorityList;
+    private boolean active;
 
-    public SystemUser(String userName){
-        this.userName = userName;
+    public SystemUser(DBUser dbUser) {
+        this.userName = dbUser.getUserName();
+        this.password = dbUser.getPassword();
+        this.grantedAuthorityList = Stream.of(dbUser.getRoles().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        this.active = dbUser.isActive();
+
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return this.grantedAuthorityList;
     }
 
     @Override
     public String getPassword() {
-        return "pass";
+        return this.password;
     }
 
     @Override
@@ -47,6 +58,6 @@ public class SystemUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.active;
     }
 }

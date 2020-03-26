@@ -1,12 +1,13 @@
-create table users(
-    username varchar_ignorecase(50) not null primary key,
-    password varchar_ignorecase(50) not null,
-    enabled boolean not null
-);
+CREATE SCHEMA springsecurity
+    AUTHORIZATION postgres;
 
-create table authorities (
-    username varchar_ignorecase(50) not null,
-    authority varchar_ignorecase(50) not null,
-    constraint fk_authorities_users foreign key(username) references users(username)
+COMMENT ON SCHEMA springsecurity
+    IS 'this schema is to keep user details required for spring authentication';
+
+create table springsecurity.user_info (
+	id serial PRIMARY KEY,
+	user_name 	varchar (50) unique not null,
+	password varchar (50) not null,
+	active boolean not null,
+	roles varchar (100)
 );
-create unique index ix_auth_username on authorities (username,authority);
