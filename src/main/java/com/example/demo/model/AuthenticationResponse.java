@@ -3,8 +3,8 @@ package com.example.demo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
 @AllArgsConstructor
+@Data
 public class AuthenticationResponse {
     private String jwt;
 }

@@ -4,6 +4,7 @@ import com.example.demo.model.AuthenticationRequest;
 import com.example.demo.model.AuthenticationResponse;
 import com.example.demo.util.JwtUtils;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,11 +20,11 @@ import java.security.Principal;
 
 @RestController
 @AllArgsConstructor
+@Slf4j
 public class UserDetailController {
 
     private AuthenticationManager authenticationManager;
     private UserDetailsService userDetailsService;
-    private JwtUtils jwtUtils;
 
     @GetMapping("/home")
     public String goToHome() {
@@ -48,11 +49,11 @@ public class UserDetailController {
                             authenticationRequest.getUserName(),
                             authenticationRequest.getPassword()));
         } catch (BadCredentialsException ex) {
-            System.out.println(ex);
+            log.error(ex.getMessage(), ex);
             throw ex;
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
-        String token = jwtUtils.generateToken(userDetails);
+        String token = JwtUtils.generateToken(userDetails);
         return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 }
